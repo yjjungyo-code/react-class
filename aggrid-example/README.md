@@ -23,6 +23,7 @@ module.exports = {
 
 
 index.css 파일에 다음 코드를 추가한다.
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
