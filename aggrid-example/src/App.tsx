@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'; 
+import { AgGridReact } from 'ag-grid-react'; 
+import 'ag-grid-community/styles/ag-grid.css'; 
+import 'ag-grid-community/styles/ag-theme-alpine.css'; 
+interface ICar { make: string; model: string; price: number; } 
+const App: React.FC = () => {
+     const gridRef = useRef<AgGridReact<ICar>>(null);
+      const [rowData, setRowData] = useState<ICar[]>([]); 
+      const [columnDefs] = useState([ { field: 'make', filter: true }, { field: 'model', filter: true }, { field: 'price' } ]);
+       const defaultColDef = useMemo(() => ({ sortable: true }), []); 
+       const cellClickedListener = useCallback((event) => { console.log('cellClicked', event); }, []); 
+       useEffect(() => { fetch('https://www.ag-grid.com/example-assets/row-data.json') 
+          .then(result => result.json()) 
+          .then(rowData => setRowData(rowData)); }, []
+        ); 
+       const buttonListener = useCallback(() => { gridRef.current?.api.deselectAll(); }, []); 
+       return ( 
+       <div>
+        <button onClick={buttonListener}>Push Me</button> 
+        <div className="ag-theme-alpine" style={{ width: 500, height: 500 }}>
+             <AgGridReact ref={gridRef} 
+                        rowData={rowData} 
+                        columnDefs={columnDefs} 
+                        defaultColDef={defaultColDef} 
+                        animateRows={true} 
+                        rowSelection="multiple" 
+                        onCellClicked={cellClickedListener} /> 
+        </div> 
+    </div> );
+};
+ export default App;
