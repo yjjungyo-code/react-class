@@ -13,6 +13,7 @@ Created PostCSS config file: postcss.config.js
 
 
 tailwind.config.js 파일을 다음과 같이 수정한다.
+
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
